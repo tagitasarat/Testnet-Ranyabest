@@ -273,10 +273,13 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
       <div class="cart-total-label">ยอดรวมทั้งหมด</div>
       <div class="cart-total-val" id="cartTotal">0 ฿</div>
     </div>
+    <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px; line-height:1.5">
+      💡 กด "ส่งรายการทาง LINE" → รายการจะถูก Copy อัตโนมัติ → เปิด LINE แล้ว <strong>วาง (Paste)</strong> แล้วกดส่งได้เลย
+    </div>
     <div class="cart-actions">
       <button class="btn-clear" onclick="clearCart()">ล้างตะกร้า</button>
       <button class="btn-copy" onclick="copyCart()">📋 Copy รายการ</button>
-      <button class="btn-line" onclick="sendToLine()">💬 สั่งซื้อทาง LINE</button>
+      <button class="btn-line" onclick="sendToLine()">💬 ส่งรายการทาง LINE</button>
     </div>
   </div>
 </div>
@@ -444,8 +447,14 @@ function sendToLine() {
   });
   text += '─────────────────\n';
   text += `ยอดรวม: ${total.toLocaleString()} ฿`;
-  const encoded = encodeURIComponent(text);
-  window.open(`https://line.me/ti/p/~hongkamon33?text=${encoded}`, '_blank');
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('📋 Copy รายการแล้ว! กำลังเปิด LINE...');
+    setTimeout(() => {
+      window.open('https://line.me/ti/p/~hongkamon33', '_blank');
+    }, 800);
+  }).catch(() => {
+    window.open('https://line.me/ti/p/~hongkamon33', '_blank');
+  });
 }
 
 function copyCart() {
