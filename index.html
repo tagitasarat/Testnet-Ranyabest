@@ -180,14 +180,15 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
   .content { padding: 1rem 1rem 5rem; }
   .stats-bar { padding: 0 1rem; }
   .table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  table { min-width: 360px; }
-  col.cn { width: 110px; } col.cp { width: 70px; } col.cu { width: 0; } col.cc { width: 0; } col.cq { width: 180px; }
+  table { min-width: unset; width: 100%; }
+  col.cn { width: 55%; } col.cp { width: 25%; } col.cu { width: 0; } col.cc { width: 0; } col.cq { width: 20%; }
   thead th:nth-child(3), tbody td:nth-child(3),
   thead th:nth-child(4), tbody td:nth-child(4) { display: none; }
   .cart-panel { max-height: 85vh; }
-  .add-btn { font-size: 11px; padding: 4px 7px; }
-  .qty-btn { width: 22px; height: 22px; font-size: 14px; }
-  .qty-input { width: 30px; font-size: 12px; }
+  .qty-wrap .qty-btn, .qty-wrap .qty-input { display: none; }
+  .qty-wrap { justify-content: center; }
+  .add-btn { font-size: 12px; padding: 6px 10px; width: 100%; }
+  col.cq { width: 80px; }
 }
 </style>
 </head>
