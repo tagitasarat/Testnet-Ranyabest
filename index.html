@@ -351,7 +351,11 @@ function setActiveCat(val) {
 }
 
 // CART STATE
-let cart = {}; // { id: { name, price, unit, qty } }
+let cart = JSON.parse(localStorage.getItem('cart') || '{}');
+
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
 
 function getCartId(name) {
   return name.replace(/\s+/g, '_');
@@ -366,6 +370,7 @@ function addToCart(name, price, unit, qty) {
   } else {
     cart[id] = { name, price, unit, qty };
   }
+  saveCart();
   updateCartUI();
   showToast(`เพิ่ม ${name} x${qty} ลงตะกร้าแล้ว`);
 }
@@ -374,18 +379,21 @@ function updateCartQty(id, delta) {
   if (!cart[id]) return;
   cart[id].qty += delta;
   if (cart[id].qty <= 0) delete cart[id];
+  saveCart();
   updateCartUI();
   renderCartBody();
 }
 
 function removeFromCart(id) {
   delete cart[id];
+  saveCart();
   updateCartUI();
   renderCartBody();
 }
 
 function clearCart() {
   cart = {};
+  saveCart();
   updateCartUI();
   renderCartBody();
 }
@@ -554,6 +562,7 @@ function addFromRow(id, name, price, unit) {
 }
 
 loadSheet();
+updateCartUI();
 </script>
 </body>
 </html>
