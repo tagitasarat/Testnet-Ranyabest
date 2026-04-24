@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ร้านยา Best — แคตตาล็อกสินค้า</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F5F0; --surface: #FFFFFF; --border: #E2DDD6;
+  --text: #1A1714; --text-muted: #7A746C;
+  --accent: #2D6A4F; --accent-dark: #52B788;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  --thead: #F2EFE9; --row-hover: #FAFAF8; --row-border: #F0EDE8;
+  --transition: background 0.25s, color 0.25s, border-color 0.25s;
+}
+[data-theme="dark"] {
+  --bg: #0F1210; --surface: #1A1F1C; --border: #2A332D;
+  --text: #E8F0EB; --text-muted: #7A9082;
+  --accent: #52B788; --accent-dark: #52B788;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.25);
+  --thead: #141A16; --row-hover: #1F2820; --row-border: #222E26;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; min-height: 100vh; transition: var(--transition); }
+
+/* HEADER */
+header { background: var(--accent); padding: 1.5rem 1.5rem 1.25rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(45,106,79,0.25); transition: var(--transition); }
+.header-inner { max-width: 900px; margin: 0 auto; }
+.header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.shop-title { font-size: 22px; font-weight: 600; color: #fff; }
+.shop-sub { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+.updated { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+.header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+/* CART BUTTON IN HEADER */
+.cart-btn-header {
+  position: relative; background: rgba(255,255,255,0.2); border: none;
+  border-radius: 99px; padding: 6px 14px 6px 10px; cursor: pointer;
+  color: #fff; font-family: inherit; font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 6px; transition: background 0.2s;
+}
+.cart-btn-header:hover { background: rgba(255,255,255,0.3); }
+.cart-badge {
+  background: #FF5252; color: #fff; border-radius: 99px;
+  font-size: 11px; font-weight: 700; padding: 1px 6px;
+  display: none;
+}
+.cart-badge.show { display: inline-block; }
+
+.theme-btn { flex-shrink: 0; background: rgba(255,255,255,0.15); border: none; border-radius: 99px; width: 52px; height: 28px; cursor: pointer; position: relative; transition: background 0.3s; }
+.theme-btn:hover { background: rgba(255,255,255,0.25); }
+.theme-btn .knob { position: absolute; top: 4px; left: 4px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); display: flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1; }
+[data-theme="dark"] .theme-btn .knob { transform: translateX(24px); }
+
+.search-row { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5; pointer-events: none; }
+#search { width: 100%; padding: 10px 12px 10px 38px; border: none; border-radius: 10px; font-family: inherit; font-size: 14px; background: rgba(255,255,255,0.15); color: #fff; outline: none; transition: background 0.2s; }
+#search::placeholder { color: rgba(255,255,255,0.55); }
+#search:focus { background: rgba(255,255,255,0.25); }
+select { padding: 10px 14px; border: none; border-radius: 10px; font-family: inherit; font-size: 13px; background: rgba(255,255,255,0.15); color: #fff; outline: none; cursor: pointer; min-width: 140px; }
+select option { color: var(--text); background: #fff; }
+
+/* STATS */
+.stats-bar { max-width: 900px; margin: 1.25rem auto 0; padding: 0 1.5rem; display: flex; gap: 10px; flex-wrap: wrap; }
+.stat-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 99px; padding: 5px 14px; font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; box-shadow: var(--shadow); transition: var(--transition); }
+.stat-chip strong { color: var(--accent); font-weight: 600; }
+
+.content { max-width: 900px; margin: 0 auto; padding: 1.25rem 1.5rem 3rem; }
+
+/* PILLS */
+.cat-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.cat-pill { padding: 5px 14px; border-radius: 99px; font-size: 12px; font-weight: 500; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+.cat-pill:hover { border-color: var(--accent); color: var(--accent); }
+.cat-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.count-info { font-size: 13px; color: var(--text-muted); margin-bottom: 1rem; }
+.count-info span { font-weight: 500; color: var(--accent); }
+
+.error-box { background: #FFF0F0; border: 1px solid #FFCDD2; border-radius: 12px; padding: 1rem 1.25rem; color: #7A2510; font-size: 14px; margin-bottom: 1rem; line-height: 1.7; }
+.error-box code { font-size: 12px; background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 4px; }
+
+/* TABLE */
+.table-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+col.cn { width: 35%; } col.cp { width: 13%; } col.cu { width: 10%; } col.cc { width: 25%; } col.cq { width: 17%; }
+thead th { background: var(--thead); padding: 11px 16px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); transition: var(--transition); }
+tbody tr { transition: background 0.1s; }
+tbody tr:hover { background: var(--row-hover); }
+tbody td { padding: 9px 16px; border-bottom: 1px solid var(--row-border); font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: var(--transition); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+.cp-val { font-weight: 600; color: var(--accent); text-align: right; }
+.cu-val { color: var(--text-muted); font-size: 13px; text-align: center; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.b-diabetes{ background:#EBF3FF; color:#1E4D9B; }
+.b-pressure{ background:#E8F7EF; color:#1A5C3A; }
+.b-lipid   { background:#FFF5E6; color:#7A4500; }
+.b-pain    { background:#FFEBE8; color:#7A2510; }
+.b-resp    { background:#EAF7F1; color:#14593A; }
+.b-psych   { background:#F0EEFF; color:#3D2A9E; }
+.b-vitamin { background:#F0FAF4; color:#1B5E35; }
+.b-device  { background:#FFF3E0; color:#7A4200; }
+.b-gi      { background:#FFF8E6; color:#7A5500; }
+.b-maxxlife{ background:#E8F0FF; color:#1A3A8F; }
+.b-mega    { background:#FFE8F5; color:#8F1A5A; }
+.b-other   { background:#F2EFE9; color:#5A5248; }
+[data-theme="dark"] .b-diabetes{ background:#0D1F3C; color:#7DAEE8; }
+[data-theme="dark"] .b-pressure{ background:#0D2218; color:#52B788; }
+[data-theme="dark"] .b-lipid   { background:#2A1A00; color:#D4923A; }
+[data-theme="dark"] .b-pain    { background:#2A0D08; color:#E07060; }
+[data-theme="dark"] .b-resp    { background:#0D2218; color:#52B788; }
+[data-theme="dark"] .b-psych   { background:#1A1030; color:#9B85E8; }
+[data-theme="dark"] .b-vitamin { background:#0D2010; color:#52B788; }
+[data-theme="dark"] .b-device  { background:#2A1800; color:#D4923A; }
+[data-theme="dark"] .b-gi      { background:#2A1E00; color:#D4A830; }
+[data-theme="dark"] .b-maxxlife{ background:#0D1A3C; color:#7A9AE8; }
+[data-theme="dark"] .b-mega    { background:#3C0D25; color:#E87AB0; }
+[data-theme="dark"] .b-other   { background:#1A1A16; color:#8A9080; }
+
+/* QTY INPUT */
+.qty-wrap { display: flex; align-items: center; gap: 4px; }
+.qty-btn { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; padding: 0; line-height: 1; font-family: inherit; flex-shrink: 0; }
+.qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+.qty-input { width: 38px; text-align: center; border: 1.5px solid var(--border); border-radius: 8px; padding: 4px 2px; font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); outline: none; }
+.qty-input:focus { border-color: var(--accent); }
+.add-btn { padding: 5px 10px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-size: 12px; font-family: inherit; cursor: pointer; font-weight: 500; white-space: nowrap; transition: opacity 0.15s; }
+.add-btn:hover { opacity: 0.85; }
+
+/* CART PANEL */
+.cart-panel {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: var(--surface); border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
+  transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  max-height: 75vh; display: flex; flex-direction: column;
+}
+.cart-panel.open { transform: translateY(0); }
+.cart-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem 0.75rem; border-bottom: 1px solid var(--border); }
+.cart-title { font-size: 16px; font-weight: 600; }
+.cart-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); padding: 0 4px; }
+.cart-body { overflow-y: auto; flex: 1; padding: 0.75rem 1.25rem; }
+.cart-empty { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 14px; }
+.cart-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--row-border); }
+.cart-item:last-child { border-bottom: none; }
+.cart-item-name { flex: 1; font-size: 14px; min-width: 0; }
+.cart-item-name small { display: block; font-size: 12px; color: var(--text-muted); }
+.cart-item-qty { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.cart-item-price { font-weight: 600; color: var(--accent); font-size: 14px; text-align: right; min-width: 70px; flex-shrink: 0; }
+.cart-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 0 4px; flex-shrink: 0; }
+.cart-remove:hover { color: #E07060; }
+
+/* CART FOOTER */
+.cart-footer { padding: 0.75rem 1.25rem 1rem; border-top: 1px solid var(--border); }
+.cart-summary { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+.cart-total-label { font-size: 14px; color: var(--text-muted); }
+.cart-total-val { font-size: 20px; font-weight: 600; color: var(--accent); }
+.cart-actions { display: flex; gap: 8px; }
+.btn-copy { flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--accent); background: transparent; color: var(--accent); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+.btn-copy:hover { background: var(--accent); color: #fff; }
+.btn-clear { padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); font-family: inherit; font-size: 14px; cursor: pointer; transition: all 0.15s; }
+.btn-clear:hover { border-color: #E07060; color: #E07060; }
+
+/* COPY TOAST */
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: #1A1714; color: #fff; padding: 10px 20px; border-radius: 99px; font-size: 13px; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 300; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.state-box { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.state-box p { font-size: 14px; }
+
+footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); transition: var(--transition); margin-bottom: 0; }
+
+@media (max-width: 600px) {
+  header { padding: 1.25rem 1rem 1rem; }
+  .content { padding: 1rem 1rem 5rem; }
+  .stats-bar { padding: 0 1rem; }
+  .table-card { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 520px; }
+  col.cn { width: 160px; } col.cp { width: 80px; } col.cu { width: 55px; } col.cc { width: 110px; } col.cq { width: 115px; }
+  .cart-panel { max-height: 85vh; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-top">
+      <div>
+        <div class="shop-title">ร้านยา Best</div>
+        <div class="shop-sub">แคตตาล็อกสินค้า</div>
+        <div class="updated" id="updatedAt"></div>
+      </div>
+      <div class="header-actions">
+        <button class="cart-btn-header" onclick="toggleCart()">
+          🛒 ตะกร้า <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+        <button class="theme-btn" onclick="toggleTheme()">
+          <span class="knob" id="themeIcon">☀️</span>
+        </button>
+      </div>
+    </div>
+    <div class="search-row">
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search" placeholder="ค้นหาชื่อยา..." oninput="render()">
+      </div>
+      <select id="catFilter" onchange="setActiveCat(this.value)">
+        <option value="">ทุกหมวด</option>
+        <option value="MaxxLife">MaxxLife</option>
+        <option value="Mega">Mega</option>
+        <option value="ยาเบาหวาน">ยาเบาหวาน</option>
+        <option value="ยาความดัน">ยาความดัน</option>
+        <option value="ยาไขมัน">ยาไขมัน</option>
+        <option value="ยาแก้ปวด/ลดไข้">ยาแก้ปวด/ลดไข้</option>
+        <option value="ยาระบบหายใจ">ยาระบบหายใจ</option>
+        <option value="ยาจิตเวช">ยาจิตเวช</option>
+        <option value="ยาระบบทางเดินอาหาร">ยาระบบทางเดินอาหาร</option>
+        <option value="วิตามิน/อาหารเสริม">วิตามิน/อาหารเสริม</option>
+        <option value="เครื่องมือแพทย์">เครื่องมือแพทย์</option>
+        <option value="อื่นๆ">อื่นๆ</option>
+      </select>
+    </div>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-chip">รายการทั้งหมด <strong id="totalCount">—</strong> รายการ</div>
+  <div class="stat-chip">ราคา <strong id="minPrice">—</strong> – <strong id="maxPrice">—</strong> บาท</div>
+</div>
+
+<div class="content">
+  <div class="cat-pills" id="catPills"></div>
+  <div id="errorBox"></div>
+  <div class="count-info" id="countInfo"></div>
+  <div class="table-card">
+    <table>
+      <colgroup><col class="cn"><col class="cp"><col class="cu"><col class="cc"><col class="cq"></colgroup>
+      <thead>
+        <tr>
+          <th>รายการยา</th>
+          <th style="text-align:right">ราคา</th>
+          <th style="text-align:center">หน่วย</th>
+          <th>หมวดหมู่</th>
+          <th style="text-align:center">ใส่ตะกร้า</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="5"><div class="state-box"><div class="spinner"></div><p>กำลังโหลดข้อมูล...</p></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>ร้านยา Best &nbsp;|&nbsp; ราคาอาจมีการเปลี่ยนแปลงโดยไม่แจ้งล่วงหน้า &nbsp;|&nbsp; สอบถามเพิ่มเติมติดต่อร้าน</footer>
+
+<!-- CART PANEL -->
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <div class="cart-title">🛒 ตะกร้าสินค้า</div>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">ยังไม่มีสินค้าในตะกร้า</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-summary">
+      <div class="cart-total-label">ยอดรวมทั้งหมด</div>
+      <div class="cart-total-val" id="cartTotal">0 ฿</div>
+    </div>
+    <div class="cart-actions">
+      <button class="btn-clear" onclick="clearCart()">ล้างตะกร้า</button>
+      <button class="btn-copy" onclick="copyCart()">📋 Copy รายการ</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbwOM15N23AIDPEZ-CIi8WIQyU_oR7-XptW5LIVjb8Vl5tTlPGBqxyfp_jaYDCw_L8ii/exec';
+
+// DARK MODE
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
+const savedTheme = localStorage.getItem('theme') ||
+  (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+if (savedTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  document.getElementById('themeIcon').textContent = '🌙';
+}
+
+// CATEGORIES
+const CAT_CLASS = {
+  "ยาเบาหวาน":"b-diabetes","ยาความดัน":"b-pressure","ยาไขมัน":"b-lipid",
+  "ยาแก้ปวด/ลดไข้":"b-pain","ยาระบบหายใจ":"b-resp","ยาจิตเวช":"b-psych",
+  "ยาระบบทางเดินอาหาร":"b-gi","วิตามิน/อาหารเสริม":"b-vitamin",
+  "เครื่องมือแพทย์":"b-device","MaxxLife":"b-maxxlife","Mega":"b-mega","อื่นๆ":"b-other"
+};
+
+function catOf(n) {
+  const l = n.toLowerCase();
+  if (/^maxxlife/.test(l)) return "MaxxLife";
+  if (/^mega /.test(l)) return "Mega";
+  if (/glucoph|metfor|diamicron|jardiance|januv|janumet|foexiga|glyxabi|glucovia|glizid|glycedieb|ozempic|wegovy|monjaro|rybesus|trajenta|tenelia|sucovia|sitagliptin|zemiglo|zemidapa|oseni|xigduo|favotan|dafomin/.test(l)) return "ยาเบาหวาน";
+  if (/blopress|diovan|exforge|dafiro|lanzaar|losartan|valsartan|micardis|edarbi|caraten|normetec|twynstar|unisia|amlod|amlopine|amlopress|madiplot|manidipin|zandip|felopine|lercardip|tritace|bisoprolol|bisoven|prenolol|metoprolol/.test(l)) return "ยาความดัน";
+  if (/crestor|atorvast|bestatin|chovas|rosucor|lipanthyl|lipostat|mevalotin|pitavast|pravast|surotin|roacta|livalo|atozet|ezetimibe|ezetrol|ezuvas|vytorin|xarator|xatrel|tovastatin|vivacor/.test(l)) return "ยาไขมัน";
+  if (/cemol|bakamol|diclof|volta|napro|probufen|umafen|solufen|ultracet|celxib|b-coxib|exib|torixib|melcalm|mel-od|naproxen|sinprofen|duocet|norgesic/.test(l)) return "ยาแก้ปวด/ลดไข้";
+  if (/anoro|symbicort|seretide|relvar|flixot|salda|busonase|rhinoc|nasonex|momemsa|mometha|aerius|bilaxten|telfast|alerest|deztanex|cetrizine|deslorat|bliztine|lorsedin|loridine|singulair/.test(l)) return "ยาระบบหายใจ";
+  if (/abilify|seroquel|apalife|neutapin|risperidone|deanxit|efexor|escitalop|lexapro|pristiq|voldoxan|duloz|quantia|trazadone/.test(l)) return "ยาจิตเวช";
+  if (/nexium|buscopan|omeprazole|pantoprazole|pariet|controloc|axiago|taprazole|miracid|gasmotin|domperidone|smecta|gaviscon|colpermin|eno|kremil|dexilant|prevacid|sucralfate|ulcefate|mucosta|diasgest|motilium|spasmex|cencopan|corilax/.test(l)) return "ยาระบบทางเดินอาหาร";
+  if (/^everest |vitamin|calcium|fish oil|collagen|probiotic|glucosamine|bioactive|albumin|albu quick|lamoon|bioflor|caltab/.test(l)) return "วิตามิน/อาหารเสริม";
+  if (/yuwell|accucheck|contour|rossmax|nipro|bd ultra|oral quick|เครื่อง/.test(l)) return "เครื่องมือแพทย์";
+  return "อื่นๆ";
+}
+
+const CATS = ["ทุกหมวด","MaxxLife","Mega","ยาเบาหวาน","ยาความดัน","ยาไขมัน","ยาแก้ปวด/ลดไข้","ยาระบบหายใจ","ยาจิตเวช","ยาระบบทางเดินอาหาร","วิตามิน/อาหารเสริม","เครื่องมือแพทย์","อื่นๆ"];
+let allData = [], activeCat = "";
+
+// CATEGORY PILLS
+const pillsEl = document.getElementById('catPills');
+CATS.forEach(c => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-pill' + (c === "ทุกหมวด" ? ' active' : '');
+  btn.textContent = c;
+  btn.onclick = () => setActiveCat(c === "ทุกหมวด" ? "" : c);
+  pillsEl.appendChild(btn);
+});
+
+function setActiveCat(val) {
+  activeCat = val;
+  document.getElementById('catFilter').value = val;
+  document.querySelectorAll('.cat-pill').forEach(el => {
+    el.classList.toggle('active', val === "" ? el.textContent === "ทุกหมวด" : el.textContent === val);
+  });
+  render();
+}
+
+// CART STATE
+let cart = {}; // { id: { name, price, unit, qty } }
+
+function getCartId(name) {
+  return name.replace(/\s+/g, '_');
+}
+
+function addToCart(name, price, unit, qty) {
+  qty = parseInt(qty) || 1;
+  if (qty <= 0) return;
+  const id = getCartId(name);
+  if (cart[id]) {
+    cart[id].qty += qty;
+  } else {
+    cart[id] = { name, price, unit, qty };
+  }
+  updateCartUI();
+  showToast(`เพิ่ม ${name} x${qty} ลงตะกร้าแล้ว`);
+}
+
+function updateCartQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  updateCartUI();
+  renderCartBody();
+}
+
+function removeFromCart(id) {
+  delete cart[id];
+  updateCartUI();
+  renderCartBody();
+}
+
+function clearCart() {
+  cart = {};
+  updateCartUI();
+  renderCartBody();
+}
+
+function updateCartUI() {
+  const items = Object.values(cart);
+  const total = items.reduce((s, i) => s + (typeof i.price === 'number' ? i.price * i.qty : 0), 0);
+  const count = items.reduce((s, i) => s + i.qty, 0);
+
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = count;
+  badge.classList.toggle('show', count > 0);
+
+  document.getElementById('cartTotal').textContent = total.toLocaleString() + ' ฿';
+}
+
+function renderCartBody() {
+  const items = Object.entries(cart);
+  const body = document.getElementById('cartBody');
+  if (!items.length) {
+    body.innerHTML = '<div class="cart-empty">ยังไม่มีสินค้าในตะกร้า</div>';
+    return;
+  }
+  body.innerHTML = items.map(([id, item]) => {
+    const priceStr = typeof item.price === 'number'
+      ? (item.price * item.qty).toLocaleString() + ' ฿'
+      : 'สอบถามราคา';
+    return `<div class="cart-item">
+      <div class="cart-item-name">
+        ${item.name}
+        <small>${item.unit} · ${typeof item.price === 'number' ? item.price.toLocaleString() + ' ฿/'+item.unit : 'สอบถามราคา'}</small>
+      </div>
+      <div class="cart-item-qty">
+        <button class="qty-btn" onclick="updateCartQty('${id}', -1)">−</button>
+        <span style="min-width:28px;text-align:center;font-weight:500">${item.qty}</span>
+        <button class="qty-btn" onclick="updateCartQty('${id}', 1)">+</button>
+      </div>
+      <div class="cart-item-price">${priceStr}</div>
+      <button class="cart-remove" onclick="removeFromCart('${id}')">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleCart() {
+  const panel = document.getElementById('cartPanel');
+  const isOpen = panel.classList.toggle('open');
+  if (isOpen) renderCartBody();
+}
+
+function copyCart() {
+  const items = Object.values(cart);
+  if (!items.length) { showToast('ตะกร้าว่างอยู่ครับ'); return; }
+  const total = items.reduce((s, i) => s + (typeof i.price === 'number' ? i.price * i.qty : 0), 0);
+  let text = '📋 รายการสั่งซื้อ — ร้านยา Best\n';
+  text += '─────────────────\n';
+  items.forEach((item, i) => {
+    const lineTotal = typeof item.price === 'number' ? (item.price * item.qty).toLocaleString() + ' ฿' : 'สอบถามราคา';
+    text += `${i+1}. ${item.name}\n   จำนวน: ${item.qty} ${item.unit} · รวม: ${lineTotal}\n`;
+  });
+  text += '─────────────────\n';
+  text += `ยอดรวม: ${total.toLocaleString()} ฿`;
+  navigator.clipboard.writeText(text).then(() => showToast('Copy รายการแล้ว! นำไปส่งได้เลยครับ'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// LOAD DATA
+async function loadSheet() {
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    allData = json
+      .filter(r => r.name && r.name.toString().trim() !== '')
+      .map(r => ({
+        name:  r.name.toString().trim(),
+        price: typeof r.price === 'number' ? r.price : parseFloat(r.price) || r.price || '',
+        unit:  (r.unit || '').toString().trim(),
+        category: catOf(r.name.toString().trim())
+      }));
+    const nums = allData.map(d => d.price).filter(p => typeof p === 'number' && p > 0);
+    document.getElementById('totalCount').textContent = allData.length.toLocaleString();
+    document.getElementById('minPrice').textContent   = Math.min(...nums).toLocaleString();
+    document.getElementById('maxPrice').textContent   = Math.max(...nums).toLocaleString();
+    document.getElementById('updatedAt').textContent  =
+      'โหลดข้อมูลเมื่อ ' + new Date().toLocaleString('th-TH', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    render();
+  } catch(e) {
+    document.getElementById('tbody').innerHTML = '';
+    document.getElementById('errorBox').innerHTML = `
+      <div class="error-box">⚠️ <strong>โหลดข้อมูลไม่ได้</strong> — กรุณาลองรีเฟรชใหม่<br><code>${e.message}</code></div>`;
+  }
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const filtered = allData.filter(d =>
+    (!q || d.name.toLowerCase().includes(q)) &&
+    (!activeCat || d.category === activeCat)
+  );
+  document.getElementById('countInfo').innerHTML =
+    `แสดง <span>${filtered.length.toLocaleString()}</span> รายการ จากทั้งหมด ${allData.length.toLocaleString()} รายการ`;
+  const tbody = document.getElementById('tbody');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="state-box"><p>ไม่พบรายการที่ค้นหา</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(d => {
+    const id = getCartId(d.name);
+    const p = typeof d.price === 'number' ? d.price.toLocaleString() + ' ฿' : (d.price || 'สอบถามราคา');
+    return `<tr>
+      <td title="${d.name}">${d.name}</td>
+      <td class="cp-val">${p}</td>
+      <td class="cu-val">${d.unit}</td>
+      <td><span class="badge ${CAT_CLASS[d.category]||'b-other'}">${d.category}</span></td>
+      <td style="text-align:center">
+        <div class="qty-wrap" style="justify-content:center">
+          <button class="qty-btn" onclick="changeQty('${id}',-1)">−</button>
+          <input class="qty-input" id="qty_${id}" type="number" value="1" min="1" max="999">
+          <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
+          <button class="add-btn" onclick="addFromRow('${id}','${d.name.replace(/'/g,"\\'")}',${typeof d.price==='number'?d.price:0},'${d.unit}')">+ ตะกร้า</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function changeQty(id, delta) {
+  const input = document.getElementById('qty_' + id);
+  if (!input) return;
+  input.value = Math.max(1, (parseInt(input.value) || 1) + delta);
+}
+
+function addFromRow(id, name, price, unit) {
+  const input = document.getElementById('qty_' + id);
+  const qty = parseInt(input?.value) || 1;
+  addToCart(name, price || 'สอบถามราคา', unit, qty);
+  if (input) input.value = 1;
+}
+
+loadSheet();
+</script>
+</body>
+</html>
