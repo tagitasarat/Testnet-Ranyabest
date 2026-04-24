@@ -159,6 +159,8 @@ tbody tr:last-child td { border-bottom: none; }
 .cart-actions { display: flex; gap: 8px; }
 .btn-copy { flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid var(--accent); background: transparent; color: var(--accent); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
 .btn-copy:hover { background: var(--accent); color: #fff; }
+.btn-line { flex: 1; padding: 10px; border-radius: 10px; border: none; background: #06C755; color: #fff; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
+.btn-line:hover { opacity: 0.85; }
 .btn-clear { padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); font-family: inherit; font-size: 14px; cursor: pointer; transition: all 0.15s; }
 .btn-clear:hover { border-color: #E07060; color: #E07060; }
 
@@ -274,6 +276,7 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
     <div class="cart-actions">
       <button class="btn-clear" onclick="clearCart()">ล้างตะกร้า</button>
       <button class="btn-copy" onclick="copyCart()">📋 Copy รายการ</button>
+      <button class="btn-line" onclick="sendToLine()">💬 สั่งซื้อทาง LINE</button>
     </div>
   </div>
 </div>
@@ -427,6 +430,22 @@ function toggleCart() {
   const panel = document.getElementById('cartPanel');
   const isOpen = panel.classList.toggle('open');
   if (isOpen) renderCartBody();
+}
+
+function sendToLine() {
+  const items = Object.values(cart);
+  if (!items.length) { showToast('ตะกร้าว่างอยู่ครับ'); return; }
+  const total = items.reduce((s, i) => s + (typeof i.price === 'number' ? i.price * i.qty : 0), 0);
+  let text = '📋 รายการสั่งซื้อ — ร้านยา Best\n';
+  text += '─────────────────\n';
+  items.forEach((item, i) => {
+    const lineTotal = typeof item.price === 'number' ? (item.price * item.qty).toLocaleString() + ' ฿' : 'สอบถามราคา';
+    text += `${i+1}. ${item.name}\n   จำนวน: ${item.qty} ${item.unit} · รวม: ${lineTotal}\n`;
+  });
+  text += '─────────────────\n';
+  text += `ยอดรวม: ${total.toLocaleString()} ฿`;
+  const encoded = encodeURIComponent(text);
+  window.open(`https://line.me/ti/p/~hongkamon33?text=${encoded}`, '_blank');
 }
 
 function copyCart() {
