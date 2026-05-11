@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///C:/Users/acer/Downloads/index_18.html -->
+<!-- saved from url=(0045)file:///C:/Users/acer/Downloads/index_23.html -->
 <html lang="th" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ร้านยา Best — แคตตาล็อกสินค้า</title>
-<link href="file:///C:/Users/acer/Downloads/index_files/css2" rel="stylesheet">
+<link href="./index_files/css2" rel="stylesheet">
 <style>
 :root {
   --bg: #F7F5F0; --surface: #FFFFFF; --border: #E2DDD6;
@@ -377,7 +377,7 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
   thead th { padding: 10px 6px; }
 }
 </style>
-</head>
+<script src="./index_files/exec"></script></head>
 <body>
 
 <header>
@@ -421,8 +421,7 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
 
 <div class="content">
   <div class="cat-pills" id="catPills"><button class="cat-pill active">ทุกหมวด</button><button class="cat-pill cat-pill-special" style="background: rgb(255, 82, 82); color: rgb(255, 255, 255); border-color: rgb(255, 82, 82); font-weight: 600; box-shadow: rgba(255, 82, 82, 0.376) 0px 0px 10px;">ราคาพิเศษ</button><button class="cat-pill">MaxxLife</button><button class="cat-pill">Mega</button><button class="cat-pill">น้ำตาเทียม</button><button class="cat-pill">ความดัน</button><button class="cat-pill">ยาความดัน</button><button class="cat-pill">ยาทาผิวหนัง</button><button class="cat-pill">ยาปฏิชีวนะ</button><button class="cat-pill">ยาระบบกระดูกและกล้ามเนื้อ</button><button class="cat-pill">ยาระบบทางเดินหายใจ</button><button class="cat-pill">ยาระบบทางเดินอาหาร</button><button class="cat-pill">ยาระบบประสาทและสมอง</button><button class="cat-pill">ยาหยอดตา</button><button class="cat-pill">ยาเบาหวาน</button><button class="cat-pill">ยาไขมัน</button><button class="cat-pill">วิตามิน/อาหารเสริม</button><button class="cat-pill">สมุนไพร</button><button class="cat-pill">อื่นๆ</button><button class="cat-pill">ฮอร์โมน</button><button class="cat-pill">เครื่องมือแพทย์</button></div>
-  <div id="errorBox">
-      <div class="error-box">⚠️ <strong>โหลดข้อมูลไม่ได้</strong> — กรุณาลองรีเฟรชใหม่<br><code>Failed to fetch</code></div></div>
+  <div id="errorBox"><div class="error-box">⚠️ <strong>โหลดข้อมูลไม่ได้</strong> — กรุณาลองรีเฟรชใหม่<br><code>Network error</code></div></div>
   <div class="count-info" id="countInfo">แสดง <span>700</span> รายการ จากทั้งหมด 700 รายการ</div>
   <div class="table-card">
     <table>
@@ -500,7 +499,7 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
 <div class="name-popup" id="namePopup" onclick="closeNamePopup()">
   <div class="name-popup-box" onclick="event.stopPropagation()">
     <div class="name-popup-label">ชื่อยา</div>
-    <img id="namePopupImg" src="file:///C:/Users/acer/Downloads/index_18.html" alt="" style="display:none;width:100%;max-height:180px;object-fit:contain;border-radius:10px;margin-bottom:10px;cursor:pointer;background:#f5f5f5">
+    <img id="namePopupImg" src="./index_files/index_18.html" alt="" style="display:none;width:100%;max-height:180px;object-fit:contain;border-radius:10px;margin-bottom:10px;cursor:pointer;background:#f5f5f5">
     <div class="name-popup-text" id="namePopupText"></div>
     <div id="namePopupGeneric" style="font-size:12px;color:var(--text-muted);margin-top:-6px;margin-bottom:10px;display:none">🔬 <span id="namePopupGenericText"></span></div>
     <div class="name-popup-actions">
@@ -513,7 +512,7 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
 <!-- IMAGE ZOOM POPUP -->
 <div class="img-popup-overlay" id="imgPopup" onclick="closeImgPopup()">
   <div class="img-popup-box" onclick="event.stopPropagation()">
-    <img id="imgPopupImg" src="file:///C:/Users/acer/Downloads/index_18.html" alt="">
+    <img id="imgPopupImg" src="./index_files/index_18.html" alt="">
     <div class="img-popup-name" id="imgPopupName"></div>
     <button class="img-popup-close" onclick="closeImgPopup()">✕</button>
   </div>
@@ -1244,35 +1243,54 @@ function closeImgPopup() {
 }
 
 // ── LOAD DATA ──
-async function loadSheet() {
-  try {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    allData = json
-      .filter(r => r.name && r.name.toString().trim() !== '')
-      .map(r => ({
-        name:     r.name.toString().trim(),
-        price:    typeof r.price === 'number' ? r.price : parseFloat(r.price) || r.price || '',
-        unit:     (r.unit || '').toString().trim(),
-        category: (r.category || '').toString().trim() || catOf(r.name.toString().trim()),
-        generic:  (r.generic || '').toString().trim(),
-        barcode:  (r.barcode || '').toString().trim(),
-        image:    (r.image || '').toString().trim()
-      }));
-    const nums = allData.map(d => d.price).filter(p => typeof p === 'number' && p > 0);
-    document.getElementById('totalCount').textContent = allData.length.toLocaleString();
-    document.getElementById('minPrice').textContent   = Math.min(...nums).toLocaleString();
-    document.getElementById('maxPrice').textContent   = Math.max(...nums).toLocaleString();
-    document.getElementById('updatedAt').textContent  =
-      'โหลดข้อมูลเมื่อ ' + new Date().toLocaleString('th-TH', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    buildCatPills();
-    render();
-  } catch(e) {
+function loadSheet() {
+  const cbName = 'gsCallback_' + Date.now();
+  const timeout = setTimeout(() => {
+    delete window[cbName];
     document.getElementById('tbody').innerHTML = '';
-    document.getElementById('errorBox').innerHTML = `
-      <div class="error-box">⚠️ <strong>โหลดข้อมูลไม่ได้</strong> — กรุณาลองรีเฟรชใหม่<br><code>${e.message}</code></div>`;
-  }
+    document.getElementById('errorBox').innerHTML =
+      '<div class="error-box">⚠️ <strong>โหลดข้อมูลไม่ได้</strong> — กรุณาลองรีเฟรชใหม่<br><code>Request timeout</code></div>';
+  }, 15000);
+
+  window[cbName] = function(json) {
+    clearTimeout(timeout);
+    delete window[cbName];
+    try {
+      allData = json
+        .filter(r => r.name && r.name.toString().trim() !== '')
+        .map(r => ({
+          name:     r.name.toString().trim(),
+          price:    typeof r.price === 'number' ? r.price : parseFloat(r.price) || r.price || '',
+          unit:     (r.unit || '').toString().trim(),
+          category: (r.category || '').toString().trim() || catOf(r.name.toString().trim()),
+          generic:  (r.generic || '').toString().trim(),
+          barcode:  (r.barcode || '').toString().trim(),
+          image:    (r.image || '').toString().trim()
+        }));
+      const nums = allData.map(d => d.price).filter(p => typeof p === 'number' && p > 0);
+      document.getElementById('totalCount').textContent = allData.length.toLocaleString();
+      document.getElementById('minPrice').textContent   = Math.min(...nums).toLocaleString();
+      document.getElementById('maxPrice').textContent   = Math.max(...nums).toLocaleString();
+      document.getElementById('updatedAt').textContent  =
+        'โหลดข้อมูลเมื่อ ' + new Date().toLocaleString('th-TH', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      buildCatPills();
+      render();
+    } catch(e) {
+      document.getElementById('errorBox').innerHTML =
+        `<div class="error-box">⚠️ <strong>โหลดข้อมูลไม่ได้</strong> — กรุณาลองรีเฟรชใหม่<br><code>${e.message}</code></div>`;
+    }
+  };
+
+  const script = document.createElement('script');
+  script.onerror = () => {
+    clearTimeout(timeout);
+    delete window[cbName];
+    document.getElementById('tbody').innerHTML = '';
+    document.getElementById('errorBox').innerHTML =
+      '<div class="error-box">⚠️ <strong>โหลดข้อมูลไม่ได้</strong> — กรุณาลองรีเฟรชใหม่<br><code>Network error</code></div>';
+  };
+  script.src = API_URL + '?callback=' + cbName;
+  document.head.appendChild(script);
 }
 
 function render() {
