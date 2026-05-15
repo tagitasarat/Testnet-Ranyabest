@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0045)file:///C:/Users/acer/Downloads/index_32.html -->
+<!-- saved from url=(0045)file:///C:/Users/acer/Downloads/index_33.html -->
 <html lang="th" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -377,6 +377,7 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
   thead th { padding: 10px 6px; }
 }
 </style>
+<script src="./index_files/index.min.js.download"></script>
 <script src="./index_files/exec"></script></head>
 <body>
 
@@ -386,7 +387,7 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
       <div>
         <div class="shop-title">ร้านยา Best</div>
         <div class="shop-sub">แคตตาล็อกสินค้า</div>
-        <div class="updated" id="updatedAt">โหลดข้อมูลเมื่อ 12 พ.ค. 2569 09:39</div>
+        <div class="updated" id="updatedAt">โหลดข้อมูลเมื่อ 12 พ.ค. 2569 09:53</div>
       </div>
       <div class="header-actions">
         <button class="cart-btn-header" onclick="toggleHistory()">
@@ -8373,14 +8374,14 @@ footer { text-align: center; padding: 1.5rem; font-size: 12px; color: var(--text
 </div>
 
 <!-- BARCODE SCANNER -->
-<div class="scanner-overlay" id="scannerOverlay">
+<div class="scanner-overlay open" id="scannerOverlay">
   <div class="scanner-box">
     <div class="scanner-head">
       <h3>📷 สแกน Barcode</h3>
       <button class="scanner-close" onclick="closeBarcodeScanner()">✕</button>
     </div>
     <div class="scanner-video-wrap">
-      <video id="scannerVideo" autoplay="" playsinline="" muted=""></video>
+      <video id="scannerVideo" autoplay="true" playsinline="true" muted="true"></video>
       <div class="scanner-aim">
         <div class="scanner-aim-inner"></div>
         <div class="scanner-line"></div>
@@ -8986,41 +8987,37 @@ let scannerStream = null;
 let scannerInterval = null;
 let barcodeDetector = null;
 
+let zxingReader = null;
 async function openBarcodeScanner() {
   document.getElementById('scannerOverlay').classList.add('open');
   document.getElementById('scannerStatus').className = 'scanner-status';
   document.getElementById('scannerStatus').textContent = '🔍 เล็งกล้องไปที่ barcode ครับ';
   document.getElementById('manualBarcode').value = '';
 
-  // ลอง BarcodeDetector API ก่อน (Chrome/Android)
-  if ('BarcodeDetector' in window) {
-    try {
-      barcodeDetector = new BarcodeDetector({ formats: ['ean_13','ean_8','code_128','code_39','qr_code','upc_a','upc_e'] });
-    } catch(e) { barcodeDetector = null; }
-  }
-
   try {
-    scannerStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 1280 } }
-    });
+    const hints = new Map();
+    const formats = [
+      ZXing.BarcodeFormat.EAN_13,
+      ZXing.BarcodeFormat.EAN_8,
+      ZXing.BarcodeFormat.CODE_128,
+      ZXing.BarcodeFormat.CODE_39,
+      ZXing.BarcodeFormat.UPC_A,
+      ZXing.BarcodeFormat.UPC_E,
+      ZXing.BarcodeFormat.QR_CODE
+    ];
+    hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+    zxingReader = new ZXing.BrowserMultiFormatReader(hints);
     const video = document.getElementById('scannerVideo');
-    video.srcObject = scannerStream;
-    await video.play();
-
-    if (barcodeDetector) {
-      scannerInterval = setInterval(async () => {
-        try {
-          const barcodes = await barcodeDetector.detect(video);
-          if (barcodes.length > 0) {
-            const code = barcodes[0].rawValue;
-            clearInterval(scannerInterval);
-            searchByBarcode(code, true);
-          }
-        } catch(e) {}
-      }, 300);
-    } else {
-      document.getElementById('scannerStatus').textContent = '📷 กล้องพร้อมแล้ว — พิมพ์ barcode ด้านล่าง หรือลอง Chrome บน Android ครับ';
-    }
+    await zxingReader.decodeFromConstraints(
+      { video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 1280 } } },
+      video,
+      (result, err) => {
+        if (result) {
+          const code = result.getText();
+          searchByBarcode(code, true);
+        }
+      }
+    );
   } catch(e) {
     document.getElementById('scannerStatus').className = 'scanner-status error';
     document.getElementById('scannerStatus').textContent = '❌ ไม่สามารถเข้าถึงกล้องได้ — ลองพิมพ์ barcode ด้านล่างแทนครับ';
@@ -9031,6 +9028,7 @@ function closeBarcodeScanner() {
   document.getElementById('scannerOverlay').classList.remove('open');
   if (scannerInterval) { clearInterval(scannerInterval); scannerInterval = null; }
   if (scannerStream) { scannerStream.getTracks().forEach(t => t.stop()); scannerStream = null; }
+  if (zxingReader) { zxingReader.reset(); zxingReader = null; }
 }
 
 function searchByBarcode(code, fromCamera = false) {
